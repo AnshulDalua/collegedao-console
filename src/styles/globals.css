@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Inter", sans-serif;
+  --elastic-out: linear(
+    0,
+    0.2178 2.1%,
+    1.1144 8.49%,
+    1.2959 10.7%,
+    1.3463 11.81%,
+    1.3705 12.94%,
+    1.3726,
+    1.3643 14.48%,
+    1.3151 16.2%,
+    1.0317 21.81%,
+    0.941 24.01%,
+    0.8912 25.91%,
+    0.8694 27.84%,
+    0.8698 29.21%,
+    0.8824 30.71%,
+    1.0122 38.33%,
+    1.0357,
+    1.046 42.71%,
+    1.0416 45.7%,
+    0.9961 53.26%,
+    0.9839 57.54%,
+    0.9853 60.71%,
+    1.0012 68.14%,
+    1.0056 72.24%,
+    0.9981 86.66%,
+    1
+  );
+}
+
+@layer base {
+  :root {
+    /* Figma Based */
+    --rho_primary: 0 0% 6%;
+    --rho_secondary: 0 0% 9%;
+    --rho_tertiary: 0 0% 12%;
+    --rho_quaternary: 0 0% 22%;
+    --rho_transparent: 0 0% 12%; /* 80% needed */
+
+    /* ShadUI Based */
+
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 240 5% 64.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+
+    --ring: 240 3.7% 15.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 400ms ease-in-out 1 normal both;
+}
+.fadeInFast {
+  animation: fadeIn 300ms ease-in-out 1 normal both;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+button {
+  transition: scale 0.5s var(--elastic-out);
+}
+
+button:active {
+  scale: 0.97;
+  transition: scale 0.5s ease;
+}
+
+button.btn-loading > .btn-loader {
+  display: block;
+}
+
+.react-flow__handle {
+  width: 4px;
+  height: 4px;
+  background: var(--background);
+  border-radius: 100%;
+}
