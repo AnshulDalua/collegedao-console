@@ -108,5 +108,10 @@
     "node": ">=16.13.0",
     "pnpm": ">=6.0.0"
   },
-  "packageManager": "pnpm@8.1.1"
+  "packageManager": "pnpm@8.1.1",
+  "description": "",
+  "main": "tailwind.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

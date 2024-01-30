@@ -5,14 +5,27 @@ import redis from "@/server/db/redis";
 import type { IEmail } from "@/types/email";
 
 export const sendMail = async (body: IEmail) => {
+  const sendGridBody = {
+    personalizations: [{ to: [{ email: body.to }] }],
+    from: { email: body.from.email, name: body.from.name },
+    subject: body.subject,
+    content: [
+      { type: 'text/plain', value: body.text },
+      { type: 'text/html', value: body.html }
+    ]
+  };
   try {
-    const data = await wretch("https://mail.nisarg.workers.dev/send")
-      .json(body)
-      .auth(`Bearer rocetta_t0ilFP`)
-      .post()
-      .text();
+    const data = await wretch("https://api.sendgrid.com/v3/mail/send")
+        .headers({
+          "Authorization": `Bearer ${process.env.SENDGRID_API_KEY}`,
+          "Content-Type": "application/json"
+        })
+        .json(sendGridBody)
+        .post()
+        .text();
     return data;
   } catch (e) {
+    console.error("Error sending email:", e);
     return "NOT OK";
   }
 };
@@ -29,10 +42,10 @@ export const sendCode = async (email: string, userIdOrName: string) => {
   const body: IEmail = {
     to: email,
     from: {
-      name: "Rocetta",
-      email: "noreply@rocetta.com",
+      name: "CollegeDAO HUB",
+      email: "admin@collegedao.io",
     },
-    subject: `Rocetta Verification Code ${code}`,
+    subject: `CollegeDAO Verification Code ${code}`,
     text: `LET'S GET YOU SIGNED IN
 
     Copy and paste this temporary login code:
@@ -41,7 +54,7 @@ export const sendCode = async (email: string, userIdOrName: string) => {
     
     If you didn't try to login, you can safely ignore this email.
     
-    Rocetta [https://rocetta.com]- a platform that helps you to pick, deploy, and manage multi-cloud infrastructure with providers like Amazon Web Services and Google Cloud.`,
+    CollegeDAO [https://collegedao.io]`,
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <html lang="en">
@@ -56,7 +69,7 @@ export const sendCode = async (email: string, userIdOrName: string) => {
                 <h1 data-id="react-email-heading" style="color:#333;font-family:Inter, -apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;font-size:24px;font-weight:bold;margin-top:40px;padding:0">Let&#x27;s get you signed in</h1>
                 <p data-id="react-email-text" style="font-size:14px;line-height:24px;margin:12px 0;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif">Copy and paste this temporary login code:</p><code style="display:inline-block;text-align:center;font-size:35px;padding:16px 4.5%;width:90.5%;background-color:#f4f4f4;border-radius:5px;border:1px solid #eee;color:#333">${code}</code>
                 <p data-id="react-email-text" style="font-size:14px;line-height:24px;margin:12px 0;color:#ababab;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin-top:14px;margin-bottom:16px">If you didn&#x27;t try to login, you can safely ignore this email.</p><img data-id="react-email-img" alt="Rocetta" src="https://splash-git-nisarg-dev-rocetta.vercel.app/rocetta.png" style="display:block;outline:none;border:none;text-decoration:none" />
-                <p data-id="react-email-text" style="font-size:12px;line-height:22px;margin:16px 0;color:#898989;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin-top:12px;margin-bottom:24px"><a href="https://rocetta.com" data-id="react-email-link" target="_blank" style="color:#898989;text-decoration:underline;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;font-size:14px">Rocetta</a>- a platform that allows you to build, deploy, and manage your cloud across providers like Amazon Web Services and Google Cloud.</p>
+                <p data-id="react-email-text" style="font-size:12px;line-height:22px;margin:16px 0;color:#898989;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin-top:12px;margin-bottom:24px"><a href="https://collegedao.io" data-id="react-email-link" target="_blank" style="color:#898989;text-decoration:underline;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;font-size:14px">Rocetta</a>- a platform that allows you to build, deploy, and manage your cloud across providers like Amazon Web Services and Google Cloud.</p>
               </td>
             </tr>
           </tbody>
@@ -65,8 +78,8 @@ export const sendCode = async (email: string, userIdOrName: string) => {
     
     </html>`,
     dkim: {
-      domainName: "rocetta.com",
-      privateKeyEnv: "ROCETTA_DKIM",
+      domainName: "collegedao.io",
+      privateKeyEnv: "",
       keySelector: "mailchannels",
     },
   };
